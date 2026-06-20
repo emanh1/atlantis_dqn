@@ -9,3 +9,4 @@ wheels/
 # Virtual environments
 .venv
 atlantis_tensorboard/
+atlantis_optuna.db
