@@ -9,6 +9,8 @@ def optimize_agent(trial):
         'learning_rate': trial.suggest_float('learning_rate', 1e-5, 1e-3, log=True),
         'batch_size': trial.suggest_categorical('batch_size', [32, 64, 128]),
         'buffer_size': trial.suggest_categorical('buffer_size', [10_000, 50_000, 100_000]),
+        "learning_starts": trial.suggest_categorical("learning_starts", [1_000, 5_000, 10_000]),
+        "gamma": trial.suggest_float("gamma", 0.95, 0.9999),
         'exploration_fraction': trial.suggest_float('exploration_fraction', 0.05, 0.2),
         'exploration_final_eps': trial.suggest_float('exploration_final_eps', 0.01, 0.05),
     }
@@ -35,7 +37,7 @@ def objective(trial):
 if __name__ == "__main__":
     print("Starting Optuna hyperparameter optimization...")
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=15)
+    study.optimize(objective, n_trials=50)
     
     print("Optimization finished.")
     print("Best hyperparameters:", study.best_params)
