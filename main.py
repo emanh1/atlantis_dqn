@@ -4,6 +4,7 @@ import ale_py
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 def main():
     print("Setting up the Atlantis environment...")
@@ -37,8 +38,20 @@ def main():
             tensorboard_log="./atlantis_tensorboard/",
         )
     
+    checkpoint_callback = CheckpointCallback(
+        save_freq=100_000,
+        save_path="./checkpoints/",
+        name_prefix="atlantis_dqn_model"
+    )
+    
     print("Starting training...")
-    model.learn(total_timesteps=10_000_000, log_interval=10, tb_log_name="DQN", reset_num_timesteps=False)
+    model.learn(
+        total_timesteps=10_000_000, 
+        log_interval=10, 
+        tb_log_name="DQN", 
+        reset_num_timesteps=False,
+        callback=checkpoint_callback
+    )
     
     model_path = "atlantis_dqn_model"
     print(f"Saving model to {model_path}.zip...")
