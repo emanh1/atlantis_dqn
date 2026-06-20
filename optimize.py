@@ -26,9 +26,9 @@ def objective(trial):
     
     hyperparams = optimize_agent(trial)
     
-    model = DQN("CnnPolicy", train_env, verbose=0, **hyperparams)
+    model = DQN("CnnPolicy", train_env, verbose=0, tensorboard_log="./atlantis_tensorboard/", **hyperparams)
     
-    model.learn(total_timesteps=1_000_000)
+    model.learn(total_timesteps=1_000_000, tb_log_name="DQN_HPO")
     
     mean_reward, _ = evaluate_policy(model, eval_env, n_eval_episodes=5)
     

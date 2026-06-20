@@ -25,10 +25,11 @@ def main():
         learning_rate=1e-4,
         exploration_fraction=0.1,
         exploration_final_eps=0.01,
+        tensorboard_log="./atlantis_tensorboard/",
     )
     
     print("Starting training...")
-    model.learn(total_timesteps=10_000_000, log_interval=10)
+    model.learn(total_timesteps=10_000_000, log_interval=10, tb_log_name="DQN")
     
     model_path = "atlantis_dqn_model"
     print(f"Saving model to {model_path}.zip...")
