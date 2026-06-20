@@ -3,7 +3,7 @@ import ale_py
 import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_util import make_atari_env
-from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.vec_env import VecFrameStack, VecTransposeImage
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.callbacks import EvalCallback
 
@@ -51,6 +51,7 @@ def objective(trial):
     
     eval_env = make_atari_env(env_id, n_envs=1, seed=0)
     eval_env = VecFrameStack(eval_env, n_stack=4)
+    eval_env = VecTransposeImage(eval_env)
     
     hyperparams = optimize_agent(trial)
     
