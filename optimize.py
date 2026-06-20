@@ -36,7 +36,12 @@ def objective(trial):
 
 if __name__ == "__main__":
     print("Starting Optuna hyperparameter optimization...")
-    study = optuna.create_study(direction="maximize")
+    study = optuna.create_study(
+        study_name="atlantis_dqn_optimization",
+        storage="sqlite:///atlantis_optuna.db",
+        load_if_exists=True,
+        direction="maximize"
+    )
     study.optimize(objective, n_trials=50)
     
     print("Optimization finished.")

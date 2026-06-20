@@ -1,3 +1,4 @@
+import os
 import gymnasium as gym
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_util import make_atari_env
@@ -14,22 +15,29 @@ def main():
     # Frame-stacking with 4 frames to capture velocity
     env = VecFrameStack(env, n_stack=4)
     
-    print("Initializing DQN agent...")
-    model = DQN(
-        "CnnPolicy",
-        env,
-        verbose=1,
-        buffer_size=100_000,
-        learning_starts=10_000,
-        batch_size=32,
-        learning_rate=1e-4,
-        exploration_fraction=0.1,
-        exploration_final_eps=0.01,
-        tensorboard_log="./atlantis_tensorboard/",
-    )
+    model_path = "atlantis_dqn_model"
+    model_file = f"{model_path}.zip"
+    
+    if os.path.exists(model_file):
+        print(f"Found existing model at {model_file}. Resuming training...")
+        model = DQN.load(model_file, env=env, tensorboard_log="./atlantis_tensorboard/")
+    else:
+        print("Initializing new DQN agent...")
+        model = DQN(
+            "CnnPolicy",
+            env,
+            verbose=1,
+            buffer_size=100_000,
+            learning_starts=10_000,
+            batch_size=32,
+            learning_rate=1e-4,
+            exploration_fraction=0.1,
+            exploration_final_eps=0.01,
+            tensorboard_log="./atlantis_tensorboard/",
+        )
     
     print("Starting training...")
-    model.learn(total_timesteps=10_000_000, log_interval=10, tb_log_name="DQN")
+    model.learn(total_timesteps=10_000_000, log_interval=10, tb_log_name="DQN", reset_num_timesteps=False)
     
     model_path = "atlantis_dqn_model"
     print(f"Saving model to {model_path}.zip...")
